@@ -43,7 +43,6 @@
             <v-text-field
               v-model="badgeInfo.name"
               label="Badge name"
-              outlined
             />
           </v-col>
           <v-col
@@ -54,7 +53,7 @@
               v-model="badgeInfo.description"
               label="Description"
               auto-grow
-              outlined
+              rows="1"
             />
           </v-col>
           <v-col
@@ -65,7 +64,7 @@
               v-model="badgeInfo.criteria.narrative"
               label="Criteria"
               auto-grow
-              outlined
+              rows="1"
             />
           </v-col>
           <v-col
@@ -78,7 +77,6 @@
               multiple
               small-chips
               hint="Press enter to insert another tag"
-              outlined
               deletable-chips
             />
           </v-col>
