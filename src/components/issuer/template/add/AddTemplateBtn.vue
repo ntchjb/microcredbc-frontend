@@ -3,6 +3,8 @@
     v-model="dialog"
     max-width="800"
     persistent
+    :fullscreen="$vuetify.breakpoint.xsOnly"
+    :hide-overlay="$vuetify.breakpoint.xsOnly"
   >
     <template v-slot:activator="{ on }">
       <v-btn
@@ -18,7 +20,7 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </template>
-    <v-card>
+    <v-card :tile="$vuetify.breakpoint.xsOnly">
       <v-card-title
         class="headline"
       >
