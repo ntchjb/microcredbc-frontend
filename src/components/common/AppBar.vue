@@ -8,11 +8,49 @@
         to="/badge"
         class="toolbar-title"
       >
-        FabricBadge
+        Fabric Badge
       </router-link>
     </v-toolbar-title>
     <v-spacer />
-    <v-toolbar-items>
+    <v-menu
+      left
+      bottom
+    >
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon
+          class="hidden-sm-and-up"
+          v-on="on"
+        >
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </template>
+
+      <v-list>
+        <v-list-item to="/badge">
+          <v-list-item-title>
+            <v-icon left>
+              mdi-seal-variant
+            </v-icon> Badge
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item to="/template">
+          <v-list-item-title>
+            <v-icon left>
+              mdi-file-hidden
+            </v-icon> Template
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="logout">
+          <v-list-item-title>
+            <v-icon left>
+              mdi-logout
+            </v-icon>Logout
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+    <v-toolbar-items class="hidden-xs-only">
       <v-btn
         to="/badge"
         text

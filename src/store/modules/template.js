@@ -1,9 +1,9 @@
 const states = {
-
+  badgeClasses: [],
 };
 
 const getters = {
-
+  badgeClasses: (state) => state.badgeClasses,
 };
 
 const actions = {
