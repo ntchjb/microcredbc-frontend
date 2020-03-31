@@ -6,9 +6,9 @@
         :key="index"
         cols="12"
       >
-        <v-card outlined>
-          <v-card-title>Alignment {{ index+1 }}</v-card-title>
-          <v-card-text>
+        <p class="title">
+          Alignment {{ index+1 }}
+        </p>
             <v-row>
               <v-col
                 cols="12"
@@ -60,17 +60,16 @@
                 />
               </v-col>
             </v-row>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
+        <v-row justify="end">
+          <v-col cols="auto">
             <v-btn
               text
               @click="removeAlignment(index)"
             >
               Remove
             </v-btn>
-          </v-card-actions>
-        </v-card>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
     <v-row justify="center">
