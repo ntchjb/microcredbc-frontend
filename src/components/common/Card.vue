@@ -27,6 +27,8 @@
       <v-dialog
         v-model="dialog"
         width="800"
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+        :hide-overlay="$vuetify.breakpoint.xsOnly"
       >
         <template v-slot:activator="{ on }">
           <v-btn
@@ -37,7 +39,7 @@
           </v-btn>
         </template>
 
-        <v-card>
+        <v-card :tile="$vuetify.breakpoint.xsOnly">
           <slot name="view-dialog" />
           <v-card-actions>
             <v-spacer />
