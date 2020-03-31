@@ -6,80 +6,77 @@
         :key="index"
         cols="12"
       >
-        <v-card outlined>
-          <v-card-title>Evidence {{ index+1 }}</v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field
-                  v-model="evidences[index].id"
-                  label="URL"
-                  outlined
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field
-                  v-model="evidences[index].name"
-                  label="Name"
-                  outlined
-                />
-              </v-col>
-              <v-col
-                cols="12"
-              >
-                <v-textarea
-                  v-model="evidences[index].description"
-                  label="Description"
-                  outlined
-                />
-              </v-col>
-              <v-col
-                cols="12"
-              >
-                <v-textarea
-                  v-model="evidences[index].narrative"
-                  label="Narrative"
-                  outlined
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field
-                  v-model="evidences[index].genre"
-                  label="Genre"
-                  outlined
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field
-                  v-model="evidences[index].audience"
-                  label="Audience"
-                  outlined
-                />
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
+        <div class="title">
+          Evidence {{ index+1 }}
+        </div>
+        <v-row>
+          <v-col
+            cols="12"
+            sm="6"
+          >
+            <v-text-field
+              v-model="evidences[index].id"
+              label="URL"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+          >
+            <v-text-field
+              v-model="evidences[index].name"
+              label="Name"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+          >
+            <v-textarea
+              v-model="evidences[index].description"
+              label="Description"
+              auto-grow
+              rows="1"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+          >
+            <v-textarea
+              v-model="evidences[index].narrative"
+              label="Narrative"
+              auto-grow
+              rows="1"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+          >
+            <v-text-field
+              v-model="evidences[index].genre"
+              label="Genre"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="6"
+          >
+            <v-text-field
+              v-model="evidences[index].audience"
+              label="Audience"
+            />
+          </v-col>
+        </v-row>
+        <v-row justify="end">
+          <v-col cols="auto">
             <v-btn
               text
               @click="removeEvidence(index)"
             >
               Remove
             </v-btn>
-          </v-card-actions>
-        </v-card>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
     <v-row justify="center">

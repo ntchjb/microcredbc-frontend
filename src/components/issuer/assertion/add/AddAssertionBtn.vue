@@ -3,6 +3,8 @@
     v-model="dialog"
     width="800"
     persistent
+    :fullscreen="$vuetify.breakpoint.xsOnly"
+    :hide-overlay="$vuetify.breakpoint.xsOnly"
   >
     <template v-slot:activator="{ on }">
       <v-btn
@@ -14,7 +16,7 @@
       </v-btn>
     </template>
 
-    <v-card>
+    <v-card :tile="$vuetify.breakpoint.xsOnly">
       <v-card-title class="headline">
         Create a badge assertion
       </v-card-title>
