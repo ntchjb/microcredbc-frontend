@@ -12,6 +12,15 @@
       >
         <issuer-template-card :badge-class="badgeClass" />
       </v-col>
+      <v-col
+        v-if="badgeClassList.length === 0"
+        cols="12"
+        class="text-center"
+      >
+        <p class="grey--text">
+          There is no badge template at the moment.
+        </p>
+      </v-col>
     </v-row>
     <add-template-btn />
   </v-container>

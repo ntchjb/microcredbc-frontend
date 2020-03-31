@@ -23,6 +23,15 @@
           :assertion="assertion"
         />
       </v-col>
+      <v-col
+        v-if="assertionList.length === 0"
+        cols="12"
+        class="text-center"
+      >
+        <p class="grey--text">
+          There is no assertions at the moment.
+        </p>
+      </v-col>
     </v-row>
   </v-container>
 </template>
