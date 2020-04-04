@@ -1,6 +1,7 @@
 <template>
   <v-card
     outlined
+    max-width="600"
   >
     <v-row justify="center">
       <v-col cols="auto">
@@ -53,23 +54,12 @@
 
     <v-card-actions>
       <v-spacer />
-      <v-btn
-        text
-        class="hidden-xs-only"
-        @click="openProfileURL"
+      <link-btn
+        :src="profile.url"
+        responsive
       >
-        <v-icon left>
-          mdi-link
-        </v-icon>
-        web
-      </v-btn>
-      <v-btn
-        icon
-        class="hidden-sm-and-up"
-        @click="openProfileURL"
-      >
-        <v-icon>mdi-link</v-icon>
-      </v-btn>
+        Web
+      </link-btn>
       <v-btn
         v-if="profile.telephone !== undefined"
         text
@@ -110,7 +100,12 @@
 </template>
 
 <script>
+const LinkBtn = () => import('./LinkBtn.vue');
+
 export default {
+  components: {
+    LinkBtn,
+  },
   props: {
     profile: {
       type: Object,

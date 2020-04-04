@@ -1,18 +1,26 @@
 <template>
   <v-dialog
     v-model="dialog"
-    width="800"
+    max-width="800"
     persistent
     :fullscreen="$vuetify.breakpoint.xsOnly"
     :hide-overlay="$vuetify.breakpoint.xsOnly"
+    :disabled="disabled"
   >
     <template v-slot:activator="{ on }">
       <v-btn
-        text
+        color="red"
+        :dark="!disabled"
+        fixed
+        bottom
+        right
+        fab
+        large
         :disabled="disabled"
+
         v-on="on"
       >
-        Issue
+        <v-icon>mdi-plus</v-icon>
       </v-btn>
     </template>
 
@@ -21,7 +29,7 @@
         Create a badge assertion
       </v-card-title>
 
-      <v-card-text>
+      <v-container fluid>
         <v-card flat>
           <v-container fluid>
             <v-row
@@ -116,7 +124,7 @@
             @change="assertion.evidence = $event"
           />
         </v-container>
-      </v-card-text>
+      </v-container>
 
       <v-card-actions>
         <v-spacer />

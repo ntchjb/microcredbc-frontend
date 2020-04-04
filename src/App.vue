@@ -4,6 +4,17 @@
     <v-content>
       <router-view />
     </v-content>
+    <v-footer height="100">
+      <div>
+        Made by
+        <v-chip
+          href="https://github.com/ntchjb"
+          target="_blank"
+        >
+          Nathachai Jaiboon
+        </v-chip>
+      </div>
+    </v-footer>
   </v-app>
 </template>
 

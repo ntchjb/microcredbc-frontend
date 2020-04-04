@@ -5,7 +5,7 @@
   >
     <v-toolbar-title>
       <router-link
-        to="/badge"
+        to="/badges"
         class="toolbar-title"
       >
         Fabric Badge
@@ -27,18 +27,11 @@
       </template>
 
       <v-list>
-        <v-list-item to="/badge">
+        <v-list-item to="/profile">
           <v-list-item-title>
             <v-icon left>
-              mdi-seal-variant
-            </v-icon> Badge
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item to="/template">
-          <v-list-item-title>
-            <v-icon left>
-              mdi-file-hidden
-            </v-icon> Template
+              mdi-account
+            </v-icon> Profile
           </v-list-item-title>
         </v-list-item>
         <v-list-item @click="logout">
@@ -52,23 +45,13 @@
     </v-menu>
     <v-toolbar-items class="hidden-xs-only">
       <v-btn
-        to="/badge"
         text
+        to="/profile"
       >
         <v-icon left>
-          mdi-seal-variant
+          mdi-account
         </v-icon>
-        Badge
-      </v-btn>
-
-      <v-btn
-        to="/template"
-        text
-      >
-        <v-icon left>
-          mdi-file-hidden
-        </v-icon>
-        Template
+        Profile
       </v-btn>
       <v-btn
         text

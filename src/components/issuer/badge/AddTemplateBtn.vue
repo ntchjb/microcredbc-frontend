@@ -27,7 +27,7 @@
         Create new Badge Template
       </v-card-title>
 
-      <v-card-text>
+      <v-container fluid>
         <v-row>
           <v-col>
             <badge-image-input
@@ -85,7 +85,7 @@
           ref="alignmentUI"
           @change="badgeInfo.alignment = $event"
         />
-      </v-card-text>
+      </v-container>
 
       <v-card-actions>
         <v-spacer />

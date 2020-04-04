@@ -5,13 +5,10 @@
     persistent
   >
     <template v-slot:activator="{ on }">
-      <v-btn
-        text
-        :disabled="archived"
-        v-on="on"
-      >
-        {{ archived ? 'Archived': 'Archive' }}
-      </v-btn>
+      <slot
+        name="btn"
+        :on="on"
+      />
     </template>
 
     <v-card>
@@ -45,12 +42,6 @@
 
 <script>
 export default {
-  props: {
-    archived: {
-      type: Boolean,
-      default: false,
-    },
-  },
   data: () => ({
     dialog: false,
   }),

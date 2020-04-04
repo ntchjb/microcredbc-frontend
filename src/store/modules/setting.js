@@ -1,3 +1,5 @@
+import { profile } from '../../../tests/mockdata';
+
 const states = {
 
 };
@@ -7,10 +9,10 @@ const getters = {
     // TODO: Check if x.509 and private key already loaded or not
     return true;
   },
-  role() {
-    // TODO: return user role got from certificate
-    return 'issuer';
-  },
+  // TODO: return user role got from certificate
+  role: () => 'consumer',
+  // TODO: return user profile received from blockchain
+  profile: () => profile,
 };
 
 const actions = {
