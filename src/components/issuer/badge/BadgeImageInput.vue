@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import { readFileAsDataURL } from '@/helper/filereader';
+
 export default {
   data: () => ({
     avatarOverlay: false,
@@ -98,19 +100,13 @@ export default {
     async readBadgeImage() {
       let imageDataUri = '';
       if (this.image !== null) {
-        imageDataUri = await this.readFile(this.image);
+        imageDataUri = await this.readImage(this.image);
       }
       this.imageDataUri = imageDataUri;
       this.$emit('change', this.imageDataUri);
     },
-    readFile(file) {
-      return new Promise((resolve) => {
-        const fr = new FileReader();
-        fr.onload = () => {
-          resolve(fr.result);
-        };
-        fr.readAsDataURL(file);
-      });
+    readImage(imageFile) {
+      return readFileAsDataURL(imageFile);
     },
     clear() {
       this.image = null;
