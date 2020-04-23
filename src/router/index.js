@@ -10,6 +10,9 @@ const routes = [
     path: '/',
     name: 'Home',
     component: () => import('../views/Home.vue'),
+    meta: {
+      isLoginPage: true,
+    },
   },
   {
     path: '/badges',
@@ -74,7 +77,12 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requireIdentity)) {
     if (store.getters['setting/isIdentityExist'] === false) {
-      next('/');
+      next({ name: 'Home' });
+      return;
+    }
+  } else if (to.matched.some((record) => record.meta.isLoginPage)) {
+    if (store.getters['setting/isIdentityExist'] === true) {
+      next({ name: 'Badges' });
       return;
     }
   }
