@@ -14,26 +14,18 @@
         <p class="subheading mx-3">
           Blockchain-based badge management for micro-credentialing platform
         </p>
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
           <v-file-input
             v-model="certFile"
             accept=".pem"
             label="X.509 Certificate file"
-            :rules="rules"
           />
           <v-file-input
             v-model="privKeyFile"
             label="Private key file"
-            :rules="rules"
           />
           <v-btn @click="login">
-            Confirm
+          Login
           </v-btn>
-        </v-form>
       </v-col>
     </v-row>
   </v-container>
