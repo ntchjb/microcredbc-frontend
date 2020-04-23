@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     openLink() {
-      this.$router.push(this.to);
+      this.$router.push({ path: this.to });
     },
   },
 };
