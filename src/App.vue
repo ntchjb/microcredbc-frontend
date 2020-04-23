@@ -38,7 +38,18 @@ export default {
       return this.$route.name === 'Home' || this.$route.name === null;
     },
   },
-    },
+
+  async created() {
+    if (this.isIdentityExist === false) {
+      const success = await this.loadIdentity();
+      if (success === true && this.$route.name === 'Home') {
+        this.$router.push({ name: 'Badges' });
+      }
+    }
+  },
+
+  methods: {
+    ...mapActions('setting', ['loadIdentity']),
   },
 };
 </script>
