@@ -14,49 +14,50 @@
         <p class="subheading mx-3">
           Blockchain-based badge management for micro-credentialing platform
         </p>
-          <v-file-input
-            v-model="certFile"
-            accept=".pem"
-            label="X.509 Certificate file"
-          />
-          <v-file-input
-            v-model="privKeyFile"
-            label="Private key file"
-          />
-          <v-btn @click="login">
+        <v-file-input
+          v-model="certFile"
+          accept=".pem"
+          label="X.509 Certificate file"
+        />
+        <v-file-input
+          v-model="privKeyFile"
+          label="Private key file"
+        />
+        <v-btn @click="login">
           Login
-          </v-btn>
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
+import { readFileAsText } from '@/helper/filereader';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
   },
   data: () => ({
-    valid: true,
     certFile: null,
     privKeyFile: null,
-    rules: [
-      (v) => !!v || 'This field is required.',
-    ],
   }),
-
   methods: {
+    ...mapActions('setting', ['importIdentity']),
     async login() {
-      console.log('hello');
-      await this.$refs.form.validate();
-      if (this.valid === false) {
+      if (this.certFile == null || this.privKeyFile == null) {
         return;
       }
+      const files = await Promise.all([
+        readFileAsText(this.certFile),
+        readFileAsText(this.privKeyFile),
+      ]);
+      await this.importIdentity({
+        certificatePEM: files[0],
+        privateKeyPEM: files[1],
+      });
       // TODO: Try to extract attributes from X.509 certificate
-      // TODO: Try to import private key to Web Cryptography API, and store them in indexDB
-      // TODO: Store X.509 Certificate to localStorage
-      this.$router.push('/badge');
+      this.$router.push({ name: 'Badges' });
     },
   },
 };

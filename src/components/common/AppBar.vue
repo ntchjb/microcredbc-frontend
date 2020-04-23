@@ -67,12 +67,14 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   methods: {
-    logout() {
-      console.log('hello');
-      // TODO: remove certificate from storage
-      this.$router.push('/');
+    ...mapActions('setting', ['removeIdentity']),
+    async logout() {
+      await this.removeIdentity();
+      this.$router.push({ name: 'Home' });
     },
   },
 };
