@@ -98,6 +98,8 @@
         <v-btn
           color="primary"
           text
+          :loading="loading"
+          :disabled="loading"
           @click="createBadge"
         >
           Create
@@ -108,6 +110,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import ImageInput from '@/components/common/ImageInput.vue';
 import AlignmentInput from './AlignmentInput.vue';
 
@@ -130,11 +133,23 @@ export default {
   data: () => ({
     dialog: false,
     badgeInfo: getDefaultBadgeInfo(),
+    loading: false,
   }),
   methods: {
-    createBadge() {
-      // TODO: Create new bage
-      this.closeDialog();
+    ...mapActions('template', ['createBadgeTemplate', 'getBadgeTemplates']),
+    async createBadge() {
+      this.loading = true;
+      try {
+        await this.createBadgeTemplate(this.badgeInfo);
+        // TODO: can be improved that only query single badge from ledger
+        await this.getBadgeTemplates();
+        this.closeDialog();
+      } catch (err) {
+        // TODO: error handling
+        console.error(err);
+      } finally {
+        this.loading = false;
+      }
     },
     closeDialog() {
       this.$refs.badgeImageUI.clear();

@@ -31,6 +31,8 @@
         </v-btn>
         <v-btn
           text
+          :loading="loading"
+          :disabled="loading"
           @click="archive"
         >
           Confirm
@@ -41,13 +43,26 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
+  props: {
+    badgeId: {
+      type: String,
+      default: '',
+    },
+  },
   data: () => ({
     dialog: false,
+    loading: false,
   }),
   methods: {
-    archive() {
+    ...mapActions('template', ['archiveBadgeTemplate']),
+    async archive() {
       // TODO: archive this badge
+      this.loading = true;
+      await this.archiveBadgeTemplate(this.badgeId);
+      this.loading = false;
       this.dialog = false;
     },
   },

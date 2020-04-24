@@ -273,6 +273,10 @@ export class FabricHTTPClient {
         });
         throw new Error(errorMsg);
       }
+      const { response } = this.proposalResponses.responses[0];
+      if (response.status !== 200) {
+        throw new Error(response.message);
+      }
     } else {
       throw new Error('Proposal content not found. Please create proposal first');
     }
@@ -286,13 +290,16 @@ export class FabricHTTPClient {
 
   /**
    * Get query results from endorsement responses
-   * @returns {?string} query result
+   * @returns {?object} query result
    */
   getQueryResults() {
     const { response } = this.proposalResponses.responses[0];
     if (response.status === 200) {
       const payloadDecoded = atob(response.payload);
-      return payloadDecoded;
+      if (payloadDecoded.length === 0) {
+        return '';
+      }
+      return JSON.parse(payloadDecoded);
     }
     return null;
   }
@@ -401,6 +408,14 @@ export class FabricHTTPClient {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Get current event service status
+   * @returns {EventServiceStatus} Event service status
+   */
+  getEventServiceStatus() {
+    return this.eventServiceStatus;
   }
 
   /**

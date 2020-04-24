@@ -3,7 +3,7 @@
     <v-row justify="end">
       <v-col cols="auto">
         <v-btn
-          elevation="0"
+          depressed
           class="mr-2"
           :small="$vuetify.breakpoint.xsOnly"
           :to="`/badges/${badgeClass.id}/recipients`"
@@ -12,10 +12,10 @@
             mdi-school
           </v-icon>Recipients
         </v-btn>
-        <archive-template-btn>
+        <archive-template-btn :badge-id="badgeClass.id">
           <template v-slot:btn="{ on }">
             <v-btn
-              elevation="0"
+              depressed
               :small="$vuetify.breakpoint.xsOnly"
               :disabled="badgeClass.archived"
               v-on="on"
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 const BadgeInfo = () => import('@/components/badge/BadgeInfo.vue');
 const AlignmentInfo = () => import('@/components/badge/AlignmentInfo.vue');
@@ -68,11 +68,34 @@ export default {
     ArchiveTemplateBtn,
     ArchiveCard,
   },
+  data: () => ({
+    defaultBadgeClass: {
+      alignment: [],
+      archived: false,
+      criteria: { narrative: '' },
+      description: '',
+      id: '',
+      image: '',
+      issuer: '',
+      name: '',
+      tags: [],
+    },
+  }),
   computed: {
     ...mapGetters('template', ['badgeClassObject']),
     badgeClass() {
-      return this.badgeClassObject[this.$route.params.id];
+      const badgeClass = this.badgeClassObject[this.$route.params.id];
+      if (badgeClass === undefined) {
+        return this.defaultBadgeClass;
+      }
+      return badgeClass;
     },
+  },
+  created() {
+    this.loadBadgeTemplates();
+  },
+  methods: {
+    ...mapActions('template', ['loadBadgeTemplates']),
   },
 };
 </script>

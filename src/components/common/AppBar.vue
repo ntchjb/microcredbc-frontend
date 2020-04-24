@@ -72,9 +72,10 @@ import { mapActions } from 'vuex';
 export default {
   methods: {
     ...mapActions('setting', ['removeIdentity', 'removeProfile']),
+    ...mapActions('template', ['clearBadgeTemplates']),
     async logout() {
       const promises = [];
-      promises.push(this.removeIdentity(), this.removeProfile());
+      promises.push(this.removeIdentity(), this.removeProfile(), this.clearBadgeTemplates());
       await Promise.all(promises);
       this.$router.push({ name: 'Home' });
     },

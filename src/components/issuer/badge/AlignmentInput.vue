@@ -72,6 +72,7 @@
     <v-row justify="center">
       <v-col cols="auto">
         <v-btn
+          depressed
           @click="addAlignment"
         >
           <v-icon left>
