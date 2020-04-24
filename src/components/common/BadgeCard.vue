@@ -33,7 +33,7 @@
         icon
         :to="to"
       >
-        <v-icon left>
+        <v-icon>
           mdi-information-outline
         </v-icon>
       </v-btn>

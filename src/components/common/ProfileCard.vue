@@ -8,6 +8,7 @@
         <v-avatar
           size="90"
           class="mt-3"
+          color="grey"
         >
           <v-img
             v-if="profile.image !== undefined"
@@ -15,6 +16,7 @@
           />
           <v-icon
             v-else
+            large
             dark
           >
             mdi-account-circle

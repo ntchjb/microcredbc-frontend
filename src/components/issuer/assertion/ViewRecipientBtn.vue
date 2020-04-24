@@ -59,8 +59,8 @@
             </div>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col>
+        <v-row justify="center">
+          <v-col cols="auto">
             <profile-card :profile="assertion.recipient" />
           </v-col>
         </v-row>
