@@ -25,7 +25,7 @@ const routes = [
       } if (store.getters['setting/role'] === roles.consumer) {
         return import('../views/ConsumerBadges.vue');
       }
-      return import('../views/Home.vue');
+      return import('../views/Loading.vue');
     },
     meta: {
       requireIdentity: true,
@@ -42,7 +42,7 @@ const routes = [
       } if (store.getters['setting/role'] === roles.consumer) {
         return import('../views/ConsumerBadge.vue');
       }
-      return import('../views/Home.vue');
+      return import('../views/Loading.vue');
     },
     meta: {
       requireIdentity: true,
@@ -74,7 +74,11 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  if (store.getters['setting/isIdentityExist'] === false) {
+    await store.dispatch('setting/loadIdentity');
+    await store.dispatch('setting/loadProfile');
+  }
   if (to.matched.some((record) => record.meta.requireIdentity)) {
     if (store.getters['setting/isIdentityExist'] === false) {
       next({ name: 'Home' });

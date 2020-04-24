@@ -61,11 +61,17 @@ import { getArrayBufferFromBase64, getBase64FromArrayBuffer } from '@/helper/dat
  * For transactions, the ID is transaction ID
  */
 
+export const fabricDefaultProperties = {
+  channel: process.env.VUE_APP_CHANNEL_NAME,
+  chaincode: process.env.VUE_APP_CHAINCODE_NAME,
+  mspid: process.env.VUE_APP_MSPID,
+};
+
 /**
  * Hyperledger Fabric HTTP client providing mechanism to sign proposal and transaction
  * then send to server
  */
-class FabricHTTPClient {
+export class FabricHTTPClient {
   /**
    * KY.js instance used to send HTTP request to server
    * @type {ky}
@@ -188,6 +194,10 @@ class FabricHTTPClient {
     this.fabricNodeNames = await this.ky.get('network/info').json();
   }
 
+  /**
+   * Get fabric node names
+   * @returns {ChannelNodeInfo} fabric node names
+   */
   getFabricNodeNames() {
     return this.fabricNodeNames;
   }
@@ -197,9 +207,16 @@ class FabricHTTPClient {
    * @param {string} functionName Chaincode function name
    * @param {Array<string>} args Arguments for the given function
    * @param {TransientMap} transientMap Transient maps used to send
-   * chaincode function argument privately
+   * chaincode function argument privately. The value in each key
+   * can be any binary string
    */
   async getUnsignedProposal(functionName, args, transientMap = {}) {
+    const processedTransientMap = {};
+    // Convert each binary string in transient map into base64 string
+    Object.keys(transientMap).forEach((key) => {
+      processedTransientMap[key] = btoa(transientMap[key]);
+    });
+
     const response = await this.ky.post('proposal/create', {
       json: {
         cert: this.certificate,
@@ -209,7 +226,7 @@ class FabricHTTPClient {
         invoke: {
           fcn: functionName,
           args,
-          transientMap,
+          transientMap: processedTransientMap,
         },
       },
     }).json();
@@ -269,16 +286,15 @@ class FabricHTTPClient {
 
   /**
    * Get query results from endorsement responses
-   * @returns {QueryResults} result
+   * @returns {?string} query result
    */
   getQueryResults() {
-    return this.proposalResponses.responses.map((response) => {
-      const result = {
-        payload: atob(response.response.payload),
-        status: response.response.status,
-      };
-      return result;
-    });
+    const { response } = this.proposalResponses.responses[0];
+    if (response.status === 200) {
+      const payloadDecoded = atob(response.payload);
+      return payloadDecoded;
+    }
+    return null;
   }
 
   /**
@@ -378,10 +394,13 @@ class FabricHTTPClient {
 
   /**
    * Get event service status
-   * @returns {EventServiceStatus} event service status
+   * @returns {boolean} event service status
    */
-  getEventServiceStatus() {
-    return this.eventServiceStatus;
+  checkEventServiceStatus() {
+    if (this.eventServiceStatus.code === 'VALID') {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -397,5 +416,3 @@ class FabricHTTPClient {
     this.fabricNodeNames = null;
   }
 }
-
-export default FabricHTTPClient;

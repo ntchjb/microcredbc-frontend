@@ -1,18 +1,16 @@
 import db from '@/helper/idb';
 import { keyPEMToJWK } from '@/helper/data';
-import FabricHTTPClient from '@/helper/fabric-rest';
+import { FabricHTTPClient, fabricDefaultProperties } from '@/helper/fabric-rest';
 
 const states = {
-  profile: {},
+  profile: null,
   privateKey: null,
   certificate: null,
 };
 
 const getters = {
   isIdentityExist: (state) => (state.privateKey !== null && state.certificate !== null),
-  // TODO: return user role got from certificate
-  role: (state) => state.profile.role,
-  // TODO: return user profile received from blockchain
+  role: (state) => (state.profile === null ? '' : state.profile.role),
   profile: (state) => state.profile,
   certificate: (state) => state.certificate,
   privateKey: (state) => state.privateKey,
@@ -37,17 +35,6 @@ const actions = {
     } catch (err) {
       console.error('Unable to import private key', err);
     }
-    // Create Fabric client to get profile information from blockchain
-    const channel = process.env.VUE_APP_CHANNEL_NAME;
-    const chaincode = process.env.VUE_APP_CHAINCODE_NAME;
-    const mspid = process.env.VUE_APP_MSPID;
-    const fabric = new FabricHTTPClient(
-      certificatePEM,
-      privateKeyObject,
-      channel,
-      chaincode,
-      mspid,
-    );
 
     const dbJobs = [];
     dbJobs.push(db.set('privateKey', privateKeyObject));
@@ -56,6 +43,58 @@ const actions = {
 
     commit('SET_PRIVATEKEY', privateKeyObject);
     commit('SET_CERTIFICATE', certificatePEM);
+  },
+
+  async getProfile({ commit, state }) {
+    // Create Fabric client to get profile information from blockchain
+    const { channel, chaincode, mspid } = fabricDefaultProperties;
+    const fabric = new FabricHTTPClient(
+      state.certificate,
+      state.privateKey,
+      channel,
+      chaincode,
+      mspid,
+    );
+    await fabric.loadFabricNodeNames();
+    const nodeNames = fabric.getFabricNodeNames();
+    await fabric.getUnsignedProposal('getProfile', []);
+    await fabric.sendSignedProposal([...nodeNames[channel].peers[mspid]]);
+    const response = fabric.getQueryResults();
+    const profile = JSON.parse(response);
+
+    await db.set('profile', profile);
+    commit('SET_PROFILE', profile);
+  },
+
+  async setProfile({ state }, profileExtra = {}) {
+    const { channel, chaincode, mspid } = fabricDefaultProperties;
+    // Create Fabric client to get profile information from blockchain
+    const fabric = new FabricHTTPClient(
+      state.certificate,
+      state.privateKey,
+      channel,
+      chaincode,
+      mspid,
+    );
+    await fabric.loadFabricNodeNames();
+    const nodeNames = fabric.getFabricNodeNames();
+    const processedProfileExtra = profileExtra;
+    Object.keys(processedProfileExtra).forEach((key) => {
+      if (!key) {
+        delete processedProfileExtra[key];
+      }
+    });
+    await fabric.getUnsignedProposal('setProfile', [], processedProfileExtra);
+    await fabric.sendSignedProposal([...nodeNames[channel].peers[mspid]]);
+    await fabric.getUnsignedTransaction();
+    await fabric.getUnsignedEventService();
+    const eventServicePromise = fabric.sendSignedEventService({
+      type: 'transaction',
+      id: fabric.getTransactionId(),
+    }, [...nodeNames[channel].peers[mspid]]);
+    await fabric.sendSignedTransaction(nodeNames[channel].orderers);
+    await eventServicePromise;
+    return fabric.checkEventServiceStatus();
   },
 
   async loadIdentity({ commit }) {
@@ -71,6 +110,15 @@ const actions = {
     return false;
   },
 
+  async loadProfile({ commit }) {
+    const profile = await db.get('profile');
+    if (profile !== undefined) {
+      commit('SET_PROFILE', profile);
+      return true;
+    }
+    return false;
+  },
+
   async removeIdentity({ commit }) {
     const dbJobs = [];
     dbJobs.push(db.delete('privateKey'));
@@ -79,6 +127,11 @@ const actions = {
 
     commit('REMOVE_CERTIFICATE');
     commit('REMOVE_PRIVATEKEY');
+  },
+
+  async removeProfile({ commit }) {
+    await db.delete('profile');
+    commit('REMOVE_PROFILE');
   },
 };
 
@@ -94,6 +147,12 @@ const mutations = {
   },
   REMOVE_PRIVATEKEY(state) {
     state.privateKey = null;
+  },
+  SET_PROFILE(state, profile) {
+    state.profile = profile;
+  },
+  REMOVE_PROFILE(state) {
+    state.profile = null;
   },
 };
 

@@ -23,7 +23,12 @@
           v-model="privKeyFile"
           label="Private key file"
         />
-        <v-btn @click="login">
+        <v-btn
+          depressed
+          :loading="loading"
+          :disabled="loading"
+          @click="login"
+        >
           Login
         </v-btn>
       </v-col>
@@ -41,13 +46,15 @@ export default {
   data: () => ({
     certFile: null,
     privKeyFile: null,
+    loading: false,
   }),
   methods: {
-    ...mapActions('setting', ['importIdentity']),
+    ...mapActions('setting', ['importIdentity', 'getProfile', 'setProfile']),
     async login() {
       if (this.certFile == null || this.privKeyFile == null) {
         return;
       }
+      this.loading = true;
       const files = await Promise.all([
         readFileAsText(this.certFile),
         readFileAsText(this.privKeyFile),
@@ -56,7 +63,14 @@ export default {
         certificatePEM: files[0],
         privateKeyPEM: files[1],
       });
-      // TODO: Try to extract attributes from X.509 certificate
+      try {
+        await this.getProfile();
+      } catch (err) {
+        await this.setProfile();
+        await this.getProfile();
+      }
+      this.loading = false;
+
       this.$router.push({ name: 'Badges' });
     },
   },

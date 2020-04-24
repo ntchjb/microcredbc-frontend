@@ -13,7 +13,7 @@
         <div
           class="title text-center"
         >
-          Your organization's MSP ID is: <v-chip>{{ profile.mspId }}</v-chip>
+          Your organization's MSP ID is: <v-chip>{{ profile.mspid }}</v-chip>
         </div>
       </v-col>
       <v-col
