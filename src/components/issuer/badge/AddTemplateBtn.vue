@@ -30,7 +30,7 @@
       <v-container fluid>
         <v-row>
           <v-col>
-            <badge-image-input
+            <image-input
               ref="badgeImageUI"
               @change="badgeInfo.image = $event"
             />
@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import BadgeImageInput from './BadgeImageInput.vue';
+import ImageInput from '@/components/common/ImageInput.vue';
 import AlignmentInput from './AlignmentInput.vue';
 
 const getDefaultBadgeInfo = () => ({
@@ -121,9 +121,10 @@ const getDefaultBadgeInfo = () => ({
   alignment: [],
   tags: [],
 });
+
 export default {
   components: {
-    BadgeImageInput,
+    ImageInput,
     AlignmentInput,
   },
   data: () => ({

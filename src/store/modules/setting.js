@@ -59,11 +59,13 @@ const actions = {
     const nodeNames = fabric.getFabricNodeNames();
     await fabric.getUnsignedProposal('getProfile', []);
     await fabric.sendSignedProposal([...nodeNames[channel].peers[mspid]]);
-    const response = fabric.getQueryResults();
-    const profile = JSON.parse(response);
-
-    await db.set('profile', profile);
-    commit('SET_PROFILE', profile);
+    const profile = fabric.getQueryResults();
+    if (profile) {
+      await db.set('profile', profile);
+      commit('SET_PROFILE', profile);
+    } else {
+      throw new Error('Profile not found in ledger');
+    }
   },
 
   async setProfile({ state }, profileExtra = {}) {
@@ -80,11 +82,14 @@ const actions = {
     const nodeNames = fabric.getFabricNodeNames();
     const processedProfileExtra = profileExtra;
     Object.keys(processedProfileExtra).forEach((key) => {
-      if (!key) {
+      if (!processedProfileExtra[key]) {
         delete processedProfileExtra[key];
       }
     });
-    await fabric.getUnsignedProposal('setProfile', [], processedProfileExtra);
+    const transientMap = {
+      profile: JSON.stringify(processedProfileExtra),
+    };
+    await fabric.getUnsignedProposal('setProfile', [], transientMap);
     await fabric.sendSignedProposal([...nodeNames[channel].peers[mspid]]);
     await fabric.getUnsignedTransaction();
     await fabric.getUnsignedEventService();

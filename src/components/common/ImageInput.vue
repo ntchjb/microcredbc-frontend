@@ -33,13 +33,16 @@
         class="text-center"
       >
         <input
-          ref="badgeImageInput"
+          ref="imageInput"
           type="file"
           accept="image/png, image/jpeg, image/bmp"
           class="d-none"
-          @change="updateBadgeImage"
+          @change="updateImage"
         >
-        <v-btn @click="activateUploadBadgeImage">
+        <v-btn
+          depressed
+          @click="activateUploadImage"
+        >
           <v-icon left>
             mdi-image
           </v-icon> Add image
@@ -63,7 +66,7 @@ export default {
     avatarOverlay: false,
     image: null,
     imageDataUri: '',
-    badgeImgRules: [
+    imageRules: [
       (value) => !value || value.size < 256000 || 'Image size should be less than 256 KB!',
     ],
     inputStatus: '',
@@ -77,14 +80,14 @@ export default {
     },
   },
   methods: {
-    activateUploadBadgeImage() {
-      this.$refs.badgeImageInput.click();
+    activateUploadImage() {
+      this.$refs.imageInput.click();
     },
-    updateBadgeImage(event) {
+    updateImage(event) {
       if (event.target.files.length > 0) {
         [this.image] = event.target.files;
         // TODO: Check for file size as rule
-        this.badgeImgRules.forEach((rule) => {
+        this.imageRules.forEach((rule) => {
           const checkResult = rule(this.image);
           if (checkResult !== true && this.isImageStatusEmpty) {
             this.inputStatus = checkResult;
@@ -93,19 +96,19 @@ export default {
           }
         });
         if (this.isImageStatusEmpty) {
-          this.readBadgeImage();
+          this.readImage();
         }
       }
     },
-    async readBadgeImage() {
+    async readImage() {
       let imageDataUri = '';
       if (this.image !== null) {
-        imageDataUri = await this.readImage(this.image);
+        imageDataUri = await this.readImageDataUrl(this.image);
       }
       this.imageDataUri = imageDataUri;
       this.$emit('change', this.imageDataUri);
     },
-    readImage(imageFile) {
+    readImageDataUrl(imageFile) {
       return readFileAsDataURL(imageFile);
     },
     clear() {
@@ -113,7 +116,7 @@ export default {
       this.inputStatus = '';
       this.imageDataUri = '';
       this.avatarOverlay = false;
-      this.$refs.badgeImageInput.value = '';
+      this.$refs.imageInput.value = '';
       this.$emit('change', this.imageDataUri);
     },
   },

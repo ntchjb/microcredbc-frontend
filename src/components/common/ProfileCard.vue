@@ -3,11 +3,17 @@
     outlined
     max-width="600"
   >
+    <v-card-actions
+      v-if="editable"
+      fluid
+    >
+      <v-spacer />
+      <slot name="top-btn" />
+    </v-card-actions>
     <v-row justify="center">
       <v-col cols="auto">
         <v-avatar
           size="90"
-          class="mt-3"
           color="grey"
         >
           <v-img
@@ -112,6 +118,10 @@ export default {
     profile: {
       type: Object,
       default: null,
+    },
+    editable: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
