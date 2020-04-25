@@ -4,6 +4,20 @@
     width="500"
     persistent
   >
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="10000"
+      multi-line
+    >
+      {{ status }}
+      <v-btn
+        color="blue"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
     <template v-slot:activator="{ on }">
       <slot
         name="btn"
@@ -55,14 +69,22 @@ export default {
   data: () => ({
     dialog: false,
     loading: false,
+    snackbar: false,
+    status: '',
   }),
   methods: {
     ...mapActions('template', ['archiveBadgeTemplate']),
     async archive() {
       this.loading = true;
-      await this.archiveBadgeTemplate(this.badgeId);
-      this.loading = false;
-      this.dialog = false;
+      try {
+        await this.archiveBadgeTemplate(this.badgeId);
+        this.dialog = false;
+      } catch (err) {
+        this.status = `Unable to archive badge template: ${err.message}`;
+        this.snackbar = true;
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };

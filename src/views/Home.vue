@@ -1,5 +1,19 @@
 <template>
   <v-container class="fill-height">
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="10000"
+      multi-line
+    >
+      {{ status }}
+      <v-btn
+        color="blue"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
     <v-row
       align="center"
       justify="center"
@@ -47,12 +61,14 @@ export default {
     certFile: null,
     privKeyFile: null,
     loading: false,
+    snackbar: false,
+    status: '',
   }),
   computed: {
     ...mapGetters('setting', ['profile']),
   },
   methods: {
-    ...mapActions('setting', ['importIdentity', 'getProfile', 'setProfile', 'setRevocationList', 'getFabricNetwork']),
+    ...mapActions('setting', ['importIdentity', 'removeIdentity', 'getProfile', 'setProfile', 'setRevocationList', 'getFabricNetwork']),
     async login() {
       if (this.certFile == null || this.privKeyFile == null) {
         return;
@@ -66,19 +82,38 @@ export default {
         certificatePEM: files[0],
         privateKeyPEM: files[1],
       });
-      await this.getFabricNetwork();
+      try {
+        await this.getFabricNetwork();
+      } catch (err) {
+        this.status = `Unable to get Fabric node names. ${err.message}`;
+        this.snackbar = true;
+        this.loading = false;
+        await this.removeIdentity();
+        return;
+      }
       try {
         await this.getProfile();
+        this.$router.push({ name: 'Badges' });
+        return;
       } catch (err) {
-        await this.setProfile();
-        await this.getProfile();
+        this.status = 'Unable to get profile. Registering users...';
+        this.snackbar = true;
         if (this.profile.role === 'issuer') {
           await this.setRevocationList();
         }
       }
-      this.loading = false;
 
-      this.$router.push({ name: 'Badges' });
+      try {
+        await this.setProfile();
+        await this.getProfile();
+        this.$router.push({ name: 'Badges' });
+      } catch (err) {
+        this.status = `Unable to set profile. ${err.message}`;
+        this.snackbar = true;
+        await this.removeIdentity();
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };

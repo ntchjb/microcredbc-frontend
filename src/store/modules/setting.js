@@ -23,20 +23,16 @@ const actions = {
     // Convert private key PEM into JWK
     const privateKey = await keyPEMToJWK(privateKeyPEM);
     let privateKeyObject = null;
-    try {
-      privateKeyObject = await window.crypto.subtle.importKey(
-        'jwk',
-        privateKey,
-        {
-          name: 'ECDSA',
-          namedCurve: process.env.VUE_APP_SIGNING_NAMED_CURVE,
-        },
-        false,
-        ['sign'],
-      );
-    } catch (err) {
-      console.error('Unable to import private key', err);
-    }
+    privateKeyObject = await window.crypto.subtle.importKey(
+      'jwk',
+      privateKey,
+      {
+        name: 'ECDSA',
+        namedCurve: process.env.VUE_APP_SIGNING_NAMED_CURVE,
+      },
+      false,
+      ['sign'],
+    );
 
     const dbJobs = [];
     dbJobs.push(db.set('privateKey', privateKeyObject));

@@ -3,6 +3,20 @@
     v-model="dialog"
     width="800"
   >
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="10000"
+      multi-line
+    >
+      {{ status }}
+      <v-btn
+        color="blue"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
     <template v-slot:activator="{ on: dialogOn }">
       <v-tooltip
         v-model="tooltip"
@@ -66,17 +80,24 @@ export default {
     tooltip: false,
     loading: false,
     reason: '',
+    snackbar: false,
+    status: '',
   }),
   methods: {
     ...mapActions('assertion', ['revokeBadgeAssertions']),
     async revoke() {
-      this.loading = true;
-      await this.revokeBadgeAssertions({
-        assertionId: this.assertion.id,
-        reason: this.reason,
-      });
-      this.loading = false;
-      this.dialog = false;
+      try {
+        this.loading = true;
+        await this.revokeBadgeAssertions({
+          assertionId: this.assertion.id,
+          reason: this.reason,
+        });
+        this.dialog = false;
+      } catch (err) {
+        this.status = `Unable to revoke assertion: ${err.message}`;
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };

@@ -1,5 +1,19 @@
 <template>
   <v-container>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="10000"
+      multi-line
+    >
+      {{ status }}
+      <v-btn
+        color="blue"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
     <v-row justify="center">
       <v-col
         cols="12"
@@ -129,6 +143,8 @@ export default {
     profileExtra: {},
     dialog: false,
     dialogLoading: false,
+    snackbar: false,
+    status: '',
   }),
   computed: {
     ...mapGetters('setting', ['profile']),
@@ -136,11 +152,17 @@ export default {
   methods: {
     ...mapActions('setting', ['setProfile', 'getProfile', 'setRevocationList']),
     async editProfile() {
-      this.dialogLoading = true;
-      await this.setProfile(this.profileExtra);
-      await this.getProfile();
-      this.dialogLoading = false;
-      this.closeDialog();
+      try {
+        this.dialogLoading = true;
+        await this.setProfile(this.profileExtra);
+        await this.getProfile();
+        this.closeDialog();
+      } catch (err) {
+        this.status = `Unable to set profile: ${err.message}`;
+        this.snackbar = true;
+      } finally {
+        this.dialogLoading = false;
+      }
     },
     openDialog() {
       this.profileExtra = {

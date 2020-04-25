@@ -6,6 +6,20 @@
     :fullscreen="$vuetify.breakpoint.xsOnly"
     :hide-overlay="$vuetify.breakpoint.xsOnly"
   >
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="10000"
+      multi-line
+    >
+      {{ status }}
+      <v-btn
+        color="blue"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
     <template v-slot:activator="{ on }">
       <v-btn
         color="red"
@@ -124,6 +138,8 @@ export default {
     dialog: false,
     badgeInfo: defaultBadgeInfo,
     loading: false,
+    snackbar: false,
+    status: '',
   }),
   methods: {
     ...mapActions('template', ['createBadgeTemplate', 'getBadgeTemplates']),
@@ -134,8 +150,8 @@ export default {
         await this.getBadgeTemplates();
         this.closeDialog();
       } catch (err) {
-        // TODO: error handling
-        console.error(err);
+        this.status = `Unable to create badge templates: ${err.message}`;
+        this.snackbar = true;
       } finally {
         this.loading = false;
       }

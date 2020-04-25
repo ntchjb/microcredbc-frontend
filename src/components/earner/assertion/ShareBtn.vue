@@ -3,6 +3,20 @@
     v-model="dialog"
     max-width="800"
   >
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="10000"
+      multi-line
+    >
+      {{ status }}
+      <v-btn
+        color="blue"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
     <template v-slot:activator="{ on }">
       <slot
         name="btn"
@@ -59,6 +73,8 @@ export default {
     dialog: false,
     selectedOrgs: [],
     loading: false,
+    snackbar: false,
+    status: '',
   }),
   computed: {
     ...mapGetters('assertion', ['assertionInfo']),
@@ -85,9 +101,15 @@ export default {
           targetMSPID: mspid,
         }));
       });
-      await Promise.all(fabricJobs);
-      this.loading = false;
-      this.dialog = false;
+      try {
+        await Promise.all(fabricJobs);
+        this.dialog = false;
+      } catch (err) {
+        this.status = `Unable to share this assertion: ${err.message}`;
+        this.snackbar = true;
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };
