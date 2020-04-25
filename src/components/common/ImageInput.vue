@@ -99,7 +99,6 @@ export default {
     updateImage(event) {
       if (event.target.files.length > 0) {
         [this.image] = event.target.files;
-        // TODO: Check for file size as rule
         this.imageRules.forEach((rule) => {
           const checkResult = rule(this.image);
           if (checkResult !== true && this.isImageStatusEmpty) {

@@ -59,7 +59,6 @@ export default {
   methods: {
     ...mapActions('template', ['archiveBadgeTemplate']),
     async archive() {
-      // TODO: archive this badge
       this.loading = true;
       await this.archiveBadgeTemplate(this.badgeId);
       this.loading = false;

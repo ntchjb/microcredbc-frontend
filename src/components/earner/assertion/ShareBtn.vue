@@ -63,7 +63,6 @@ export default {
   computed: {
     ...mapGetters('assertion', ['assertionInfo']),
     ...mapGetters('setting', ['fabricNetwork']),
-    // TODO: Query list of MSP ID from Fabric SDK
     mspIDs() {
       const network = this.fabricNetwork;
       const { channel } = fabricDefaultProperties;

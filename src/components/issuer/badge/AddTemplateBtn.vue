@@ -131,7 +131,6 @@ export default {
       this.loading = true;
       try {
         await this.createBadgeTemplate(this.badgeInfo);
-        // TODO: can be improved that only query single badge from ledger
         await this.getBadgeTemplates();
         this.closeDialog();
       } catch (err) {

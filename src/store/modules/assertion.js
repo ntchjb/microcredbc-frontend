@@ -15,7 +15,6 @@ const states = {
 };
 
 const getters = {
-  // TODO: Query from backend
   assertions: (state) => state.assertions,
   assertionInfo: (state) => (id) => {
     const assertion = state.assertions[id];

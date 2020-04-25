@@ -70,7 +70,6 @@ export default {
   methods: {
     ...mapActions('assertion', ['revokeBadgeAssertions']),
     async revoke() {
-      // TODO: revoke assertions
       this.loading = true;
       await this.revokeBadgeAssertions({
         assertionId: this.assertion.id,
