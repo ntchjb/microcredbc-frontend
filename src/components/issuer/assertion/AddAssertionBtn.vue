@@ -145,14 +145,7 @@ import DatePicker from '@/components/common/DatePicker.vue';
 import { mapActions, mapGetters } from 'vuex';
 import EvidenceInput from './EvidenceInput.vue';
 import { readFileAsText } from '../../../helper/filereader';
-
-const getDefaultAssertion = () => ({
-  recipient: {},
-  badge: '',
-  evidence: [],
-  narrative: '',
-  expires: '',
-});
+import { defaultAssertionInfo } from '../../../constants';
 
 export default {
   components: {
@@ -172,7 +165,7 @@ export default {
   },
   data: () => ({
     dialog: false,
-    assertion: getDefaultAssertion(),
+    assertion: defaultAssertionInfo,
     recipientProfile: null,
     loading: false,
   }),
@@ -217,7 +210,7 @@ export default {
     },
     closeDialog() {
       this.$refs.evidenceUI.clear();
-      this.badgeInfo = getDefaultAssertion();
+      this.badgeInfo = defaultAssertionInfo;
       this.dialog = false;
     },
   },

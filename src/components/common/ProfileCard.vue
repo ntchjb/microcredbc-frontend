@@ -108,6 +108,8 @@
 </template>
 
 <script>
+import { defaultProfile } from '../../constants';
+
 const LinkBtn = () => import('./LinkBtn.vue');
 
 export default {
@@ -117,14 +119,7 @@ export default {
   props: {
     profile: {
       type: Object,
-      default: () => ({
-        name: '',
-        description: '',
-        image: '',
-        url: '',
-        telephone: '',
-        email: '',
-      }),
+      default: defaultProfile,
     },
     editable: {
       type: Boolean,
@@ -136,14 +131,7 @@ export default {
       if (this.profile) {
         return this.profile;
       }
-      return {
-        name: '',
-        description: '',
-        image: '',
-        url: '',
-        telephone: '',
-        email: '',
-      };
+      return defaultProfile;
     },
   },
   methods: {

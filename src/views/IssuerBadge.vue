@@ -55,6 +55,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { defaultTemplate } from '@/constants';
 
 const BadgeInfo = () => import('@/components/badge/BadgeInfo.vue');
 const AlignmentInfo = () => import('@/components/badge/AlignmentInfo.vue');
@@ -69,17 +70,7 @@ export default {
     ArchiveCard,
   },
   data: () => ({
-    defaultBadgeClass: {
-      alignment: [],
-      archived: false,
-      criteria: { narrative: '' },
-      description: '',
-      id: '',
-      image: '',
-      issuer: '',
-      name: '',
-      tags: [],
-    },
+    defaultBadgeClass: defaultTemplate,
   }),
   computed: {
     ...mapGetters('template', ['badgeClassObject']),

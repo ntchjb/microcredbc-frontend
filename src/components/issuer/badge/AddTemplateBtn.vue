@@ -113,17 +113,7 @@
 import { mapActions } from 'vuex';
 import ImageInput from '@/components/common/ImageInput.vue';
 import AlignmentInput from './AlignmentInput.vue';
-
-const getDefaultBadgeInfo = () => ({
-  name: '',
-  description: '',
-  image: null,
-  criteria: {
-    narrative: '',
-  },
-  alignment: [],
-  tags: [],
-});
+import { defaultBadgeInfo } from '../../../constants';
 
 export default {
   components: {
@@ -132,7 +122,7 @@ export default {
   },
   data: () => ({
     dialog: false,
-    badgeInfo: getDefaultBadgeInfo(),
+    badgeInfo: defaultBadgeInfo,
     loading: false,
   }),
   methods: {
@@ -154,7 +144,7 @@ export default {
     closeDialog() {
       this.$refs.badgeImageUI.clear();
       this.$refs.alignmentUI.clear();
-      this.badgeInfo = getDefaultBadgeInfo();
+      this.badgeInfo = defaultBadgeInfo;
       this.dialog = false;
     },
   },

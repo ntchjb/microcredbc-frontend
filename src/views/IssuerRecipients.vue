@@ -41,6 +41,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { defaultTemplate } from '../constants';
 
 const AddAssertionBtn = () => import('@/components/issuer/assertion/AddAssertionBtn.vue');
 const AssertionTable = () => import('@/components/issuer/assertion/AssertionTable.vue');
@@ -70,7 +71,7 @@ export default {
       if (badgeClass !== undefined) {
         return badgeClass;
       }
-      return {};
+      return defaultTemplate;
     },
   },
   created() {

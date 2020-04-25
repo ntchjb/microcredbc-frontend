@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { defaultTemplate, defaultAssertion } from '../constants';
 
 const BadgeInfo = () => import('@/components/badge/BadgeInfo.vue');
 const AssertionInfo = () => import('@/components/assertion/AssertionInfo.vue');
@@ -108,10 +108,20 @@ export default {
   computed: {
     ...mapGetters('assertion', ['assertions']),
     assertion() {
-      return this.assertions[this.$route.params.id];
+      const assertion = this.assertions[this.$route.params.id];
+      if (assertion !== undefined) {
+        return assertion;
+      }
+      return defaultAssertion;
     },
     badgeClass() {
-      return this.assertions[this.$route.params.id].badge;
+      const assertion = this.assertions[this.$route.params.id];
+      if (assertion !== undefined) {
+        return assertion.badge;
+      }
+      return defaultTemplate;
+    },
+  },
     },
   },
 };
