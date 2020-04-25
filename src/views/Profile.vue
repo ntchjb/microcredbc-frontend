@@ -49,6 +49,7 @@
                     <v-col cols="auto">
                       <image-input
                         ref="badgeImageUI"
+                        :init-img="profileExtra.image"
                         @change="profileExtra.image = $event"
                       />
                     </v-col>
@@ -96,11 +97,24 @@
         </profile-card>
       </v-col>
     </v-row>
+    <v-row justify="center">
+      <v-col cols="auto">
+        <v-btn
+          depressed
+          @click="downloadProfile"
+        >
+          <v-icon left>
+            mdi-download
+          </v-icon> Download profile
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { generateAndDownloadTextFile } from '../helper/filereader';
 
 
 const ProfileCard = () => import('@/components/common/ProfileCard.vue');
@@ -120,7 +134,7 @@ export default {
     ...mapGetters('setting', ['profile']),
   },
   methods: {
-    ...mapActions('setting', ['setProfile', 'getProfile']),
+    ...mapActions('setting', ['setProfile', 'getProfile', 'setRevocationList']),
     async editProfile() {
       this.dialogLoading = true;
       await this.setProfile(this.profileExtra);
@@ -140,6 +154,9 @@ export default {
       this.profileExtra = {};
       this.$refs.badgeImageUI.clear();
       this.dialog = false;
+    },
+    downloadProfile() {
+      generateAndDownloadTextFile(`${this.profile.name} Profile.json`, JSON.stringify(this.profile));
     },
   },
 };

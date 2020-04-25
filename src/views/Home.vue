@@ -38,7 +38,7 @@
 
 <script>
 import { readFileAsText } from '@/helper/filereader';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -48,8 +48,11 @@ export default {
     privKeyFile: null,
     loading: false,
   }),
+  computed: {
+    ...mapGetters('setting', ['profile']),
+  },
   methods: {
-    ...mapActions('setting', ['importIdentity', 'getProfile', 'setProfile']),
+    ...mapActions('setting', ['importIdentity', 'getProfile', 'setProfile', 'setRevocationList']),
     async login() {
       if (this.certFile == null || this.privKeyFile == null) {
         return;
@@ -68,6 +71,9 @@ export default {
       } catch (err) {
         await this.setProfile();
         await this.getProfile();
+        if (this.profile.role === 'issuer') {
+          await this.setRevocationList();
+        }
       }
       this.loading = false;
 

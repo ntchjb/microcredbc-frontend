@@ -102,6 +102,35 @@ const actions = {
     return fabric.checkEventServiceStatus();
   },
 
+  async setRevocationList({ state }) {
+    const { channel, chaincode, mspid } = fabricDefaultProperties;
+    // Create Fabric client to get profile information from blockchain
+    const fabric = new FabricHTTPClient(
+      state.certificate,
+      state.privateKey,
+      channel,
+      chaincode,
+      mspid,
+    );
+    await fabric.loadFabricNodeNames();
+    const nodeNames = fabric.getFabricNodeNames();
+    let allPeers = [];
+    Object.keys(nodeNames[channel].peers).forEach((peerMspid) => {
+      allPeers = allPeers.concat(nodeNames[channel].peers[peerMspid]);
+    });
+    await fabric.getUnsignedProposal('setRevocationList', []);
+    await fabric.sendSignedProposal(allPeers);
+    await fabric.getUnsignedTransaction();
+    await fabric.getUnsignedEventService();
+    const eventServicePromise = fabric.sendSignedEventService({
+      type: 'transaction',
+      id: fabric.getTransactionId(),
+    }, allPeers);
+    await fabric.sendSignedTransaction(nodeNames[channel].orderers);
+    await eventServicePromise;
+    return fabric.checkEventServiceStatus();
+  },
+
   async loadIdentity({ commit }) {
     const dbJobs = [];
     dbJobs.push(db.get('privateKey'));

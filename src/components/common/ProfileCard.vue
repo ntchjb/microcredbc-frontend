@@ -17,8 +17,8 @@
           color="grey"
         >
           <v-img
-            v-if="profile.image !== undefined"
-            :src="profile.image"
+            v-if="profileWithDefaults.image"
+            :src="profileWithDefaults.image"
           />
           <v-icon
             v-else
@@ -33,29 +33,29 @@
     <v-list-item three-line>
       <v-list-item-content>
         <v-list-item-title class="headline mb-1 text-center">
-          {{ profile.name }}
+          {{ profileWithDefaults.name }}
         </v-list-item-title>
         <v-list-item-subtitle
-          v-if="profile.description !== undefined"
+          v-if="profileWithDefaults.description !== undefined"
           class="mb-6 text-center"
         >
-          {{ profile.description }}
+          {{ profileWithDefaults.description }}
         </v-list-item-subtitle>
         <v-list-item-subtitle>
           <v-icon left>
             mdi-email
-          </v-icon>{{ profile.email }}
+          </v-icon>{{ profileWithDefaults.email }}
         </v-list-item-subtitle>
-        <v-list-item-subtitle v-if="profile.telephone !== undefined">
+        <v-list-item-subtitle v-if="profileWithDefaults.telephone !== undefined">
           <v-icon left>
             mdi-phone
           </v-icon>
-          {{ profile.telephone }}
+          {{ profileWithDefaults.telephone }}
         </v-list-item-subtitle>
         <v-list-item-subtitle>
           <v-icon left>
             mdi-information
-          </v-icon>{{ profile.url }}
+          </v-icon>{{ profileWithDefaults.url }}
         </v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -63,13 +63,13 @@
     <v-card-actions>
       <v-spacer />
       <link-btn
-        :src="profile.url"
+        :src="profileWithDefaults.url"
         responsive
       >
         Web
       </link-btn>
       <v-btn
-        v-if="profile.telephone !== undefined"
+        v-if="profileWithDefaults.telephone !== undefined"
         text
         class="hidden-xs-only"
         @click="callProfile"
@@ -117,22 +117,44 @@ export default {
   props: {
     profile: {
       type: Object,
-      default: null,
+      default: () => ({
+        name: '',
+        description: '',
+        image: '',
+        url: '',
+        telephone: '',
+        email: '',
+      }),
     },
     editable: {
       type: Boolean,
       default: false,
     },
   },
+  computed: {
+    profileWithDefaults() {
+      if (this.profile) {
+        return this.profile;
+      }
+      return {
+        name: '',
+        description: '',
+        image: '',
+        url: '',
+        telephone: '',
+        email: '',
+      };
+    },
+  },
   methods: {
     openProfileURL() {
-      window.open(this.profile.url, '_blank');
+      window.open(this.profileWithDefaults.url, '_blank');
     },
     callProfile() {
-      window.open(`tel:${this.profile.telephone}`);
+      window.open(`tel:${this.profileWithDefaults.telephone}`);
     },
     mailProfile() {
-      window.open(`mailto:${this.profile.email}`);
+      window.open(`mailto:${this.profileWithDefaults.email}`);
     },
   },
 };

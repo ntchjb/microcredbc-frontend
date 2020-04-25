@@ -62,21 +62,34 @@
 import { readFileAsDataURL } from '@/helper/filereader';
 
 export default {
-  data: () => ({
-    avatarOverlay: false,
-    image: null,
-    imageDataUri: '',
-    imageRules: [
-      (value) => !value || value.size < 256000 || 'Image size should be less than 256 KB!',
-    ],
-    inputStatus: '',
-  }),
+  props: {
+    initImg: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
+    return {
+      avatarOverlay: false,
+      image: null,
+      imageDataUri: this.initImg,
+      imageRules: [
+        (value) => !value || value.size < 256000 || 'Image size should be less than 256 KB!',
+      ],
+      inputStatus: '',
+    };
+  },
   computed: {
     isImageEmpty() {
       return this.imageDataUri === '';
     },
     isImageStatusEmpty() {
       return this.inputStatus === '';
+    },
+  },
+  watch: {
+    initImg(newImage) {
+      this.imageDataUri = newImage;
     },
   },
   methods: {

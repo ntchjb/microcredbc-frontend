@@ -10,6 +10,20 @@
         </div>
       </v-col>
     </v-row>
+    <v-row justify="center">
+      <v-col cols="auto">
+        <v-btn
+          depressed
+          :loading="loading"
+          :disabled="loading"
+          @click="refresh"
+        >
+          <v-icon left>
+            mdi-refresh
+          </v-icon> Refresh
+        </v-btn>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col>
         <assertion-table
@@ -26,7 +40,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 const AddAssertionBtn = () => import('@/components/issuer/assertion/AddAssertionBtn.vue');
 const AssertionTable = () => import('@/components/issuer/assertion/AssertionTable.vue');
@@ -36,16 +50,40 @@ export default {
     AddAssertionBtn,
     AssertionTable,
   },
+  data: () => ({
+    loading: false,
+  }),
   computed: {
     ...mapGetters('assertion', ['assertions', 'badgeAssertions']),
     ...mapGetters('template', ['badgeClassObject']),
     // Return list of assertions for the given badge template ID
     assertionList() {
-      return this.badgeAssertions[this.$route.params.id]
-        .map((templateId) => this.assertions[templateId]);
+      const assertionIdList = this.badgeAssertions[this.$route.params.id];
+      if (assertionIdList !== undefined) {
+        return this.badgeAssertions[this.$route.params.id]
+          .map((templateId) => this.assertions[templateId]);
+      }
+      return [];
     },
     badgeClass() {
-      return this.badgeClassObject[this.$route.params.id];
+      const badgeClass = this.badgeClassObject[this.$route.params.id];
+      if (badgeClass !== undefined) {
+        return badgeClass;
+      }
+      return {};
+    },
+  },
+  created() {
+    this.loadBadgeTemplates();
+    this.loadBadgeAssertions();
+  },
+  methods: {
+    ...mapActions('assertion', ['getBadgeAssertions', 'loadBadgeAssertions']),
+    ...mapActions('template', ['loadBadgeTemplates']),
+    async refresh() {
+      this.loading = true;
+      await this.getBadgeAssertions();
+      this.loading = false;
     },
   },
 };

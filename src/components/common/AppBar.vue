@@ -73,9 +73,15 @@ export default {
   methods: {
     ...mapActions('setting', ['removeIdentity', 'removeProfile']),
     ...mapActions('template', ['clearBadgeTemplates']),
+    ...mapActions('assertion', ['clearBadgeAssertions']),
     async logout() {
       const promises = [];
-      promises.push(this.removeIdentity(), this.removeProfile(), this.clearBadgeTemplates());
+      promises.push(
+        this.removeIdentity(),
+        this.removeProfile(),
+        this.clearBadgeTemplates(),
+        this.clearBadgeAssertions(),
+      );
       await Promise.all(promises);
       this.$router.push({ name: 'Home' });
     },

@@ -22,7 +22,13 @@
         Are you sure you want to revoke this assertion?
       </v-card-title>
       <v-card-text>
-        Assertion of {{ assertion.recipient.name }} ({{ assertion.recipient.email }})
+        <div>
+          Assertion of {{ assertion.recipient.name }} ({{ assertion.recipient.email }})
+        </div>
+        <v-text-field
+          v-model="reason"
+          label="Please give a reason for this revocation..."
+        />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -34,6 +40,8 @@
         </v-btn>
         <v-btn
           text
+          :loading="loading"
+          :disabled="loading"
           @click="revoke(assertion)"
         >
           Revoke
@@ -44,6 +52,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   props: {
     assertion: {
@@ -54,10 +64,19 @@ export default {
   data: () => ({
     dialog: false,
     tooltip: false,
+    loading: false,
+    reason: '',
   }),
   methods: {
-    revoke() {
+    ...mapActions('assertion', ['revokeBadgeAssertions']),
+    async revoke() {
       // TODO: revoke assertions
+      this.loading = true;
+      await this.revokeBadgeAssertions({
+        assertionId: this.assertion.id,
+        reason: this.reason,
+      });
+      this.loading = false;
       this.dialog = false;
     },
   },

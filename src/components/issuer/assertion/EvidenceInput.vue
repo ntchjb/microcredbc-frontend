@@ -82,6 +82,7 @@
     <v-row justify="center">
       <v-col cols="auto">
         <v-btn
+          depressed
           @click="addEvidence"
         >
           <v-icon left>
