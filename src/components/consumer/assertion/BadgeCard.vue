@@ -38,16 +38,6 @@
           <v-list-item-content>
             <v-list-item-title v-text="bottomTitleTruncated" />
           </v-list-item-content>
-          <v-list-item-action>
-            <v-btn
-              icon
-              :to="to"
-            >
-              <v-icon>
-                mdi-information-outline
-              </v-icon>
-            </v-btn>
-          </v-list-item-action>
         </v-list-item>
       </v-list>
     </v-card-actions>

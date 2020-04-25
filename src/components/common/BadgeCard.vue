@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="fill-height">
     <v-card
       flat
       tile
@@ -26,18 +26,6 @@
     </v-card>
     <v-card-title>{{ title }}</v-card-title>
     <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
-    <v-card-actions>
-      <v-spacer />
-      <slot name="action-btn" />
-      <v-btn
-        icon
-        :to="to"
-      >
-        <v-icon>
-          mdi-information-outline
-        </v-icon>
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
