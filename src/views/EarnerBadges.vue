@@ -3,10 +3,15 @@
     <v-row justify="center">
       <v-col cols="auto">
         <div
-          class="display-2 mb-4 text-center"
+          class="display-2 text-center"
         >
           Badges
         </div>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-col cols="auto">
+        <refresh-assertion-btn />
       </v-col>
     </v-row>
     <v-row justify="center">
@@ -40,14 +45,19 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 const BadgeCard = () => import('@/components/common/BadgeCard.vue');
+const RefreshAssertionBtn = () => import('@/components/common/RefreshAssertionBtn.vue');
 
 export default {
   components: {
     BadgeCard,
+    RefreshAssertionBtn,
   },
+  data: () => ({
+    loading: false,
+  }),
   computed: {
     ...mapGetters('assertion', ['assertions']),
     badgeList() {
@@ -56,6 +66,12 @@ export default {
     assertionIdList() {
       return Object.keys(this.assertions);
     },
+  },
+  created() {
+    this.loadBadgeAssertions();
+  },
+  methods: {
+    ...mapActions('assertion', ['loadBadgeAssertions']),
   },
 };
 </script>

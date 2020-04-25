@@ -2,7 +2,7 @@
   <v-container>
     <v-row justify="end">
       <v-col cols="auto">
-        <share-btn>
+        <share-btn :assertion-id="assertion.id">
           <template v-slot:btn="{ on }">
             <v-btn
               elevation="0"
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import { defaultTemplate, defaultAssertion } from '../constants';
 
 const BadgeInfo = () => import('@/components/badge/BadgeInfo.vue');
@@ -122,7 +123,11 @@ export default {
       return defaultTemplate;
     },
   },
-    },
+  created() {
+    this.loadBadgeAssertions();
+  },
+  methods: {
+    ...mapActions('assertion', ['loadBadgeAssertions']),
   },
 };
 </script>

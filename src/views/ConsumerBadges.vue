@@ -3,18 +3,15 @@
     <v-row justify="center">
       <v-col cols="auto">
         <div
-          class="display-2 mb-4 text-center"
+          class="display-2 text-center"
         >
           Shared badges
         </div>
       </v-col>
     </v-row>
     <v-row justify="center">
-      <v-col
-        cols="12"
-        sm="8"
-      >
-        <search-input />
+      <v-col cols="auto">
+        <refresh-assertion-btn />
       </v-col>
     </v-row>
     <v-row justify="center">
@@ -23,7 +20,8 @@
         :key="badgeClass.id"
         cols="12"
         sm="6"
-        md="4"
+        lg="4"
+        xl="3"
       >
         <badge-card
           :title="badgeClass.name"
@@ -48,15 +46,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 const BadgeCard = () => import('@/components/consumer/assertion/BadgeCard.vue');
-const SearchInput = () => import('@/components/consumer/assertion/SearchInput.vue');
+const RefreshAssertionBtn = () => import('@/components/common/RefreshAssertionBtn.vue');
 
 export default {
   components: {
     BadgeCard,
-    SearchInput,
+    RefreshAssertionBtn,
   },
   computed: {
     ...mapGetters('assertion', ['assertions']),
@@ -66,6 +64,12 @@ export default {
     assertionIdList() {
       return Object.keys(this.assertions);
     },
+  },
+  created() {
+    this.loadBadgeAssertions();
+  },
+  methods: {
+    ...mapActions('assertion', ['loadBadgeAssertions']),
   },
 };
 </script>

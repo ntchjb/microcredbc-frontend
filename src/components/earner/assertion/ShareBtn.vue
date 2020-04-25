@@ -33,6 +33,8 @@
         </v-btn>
         <v-btn
           text
+          :loading="loading"
+          :disabled="loading"
           @click="share"
         >
           Share
@@ -45,12 +47,21 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { fabricDefaultProperties } from '../../../helper/fabric-rest';
+
 export default {
+  props: {
+    assertionId: {
+      type: String,
+      default: '',
+    },
+  },
   data: () => ({
     dialog: false,
     selectedOrgs: [],
+    loading: false,
   }),
   computed: {
+    ...mapGetters('assertion', ['assertionInfo']),
     ...mapGetters('setting', ['fabricNetwork']),
     // TODO: Query list of MSP ID from Fabric SDK
     mspIDs() {
@@ -63,8 +74,20 @@ export default {
     },
   },
   methods: {
-    share() {
-      // TODO: share this badge to target organizations
+    ...mapActions('assertion', ['shareBadgeAssertion']),
+
+    async share() {
+      this.loading = true;
+      const fabricJobs = [];
+      this.selectedOrgs.forEach((mspid) => {
+        fabricJobs.push(this.shareBadgeAssertion({
+          assertionID: this.assertionId,
+          assertionInfo: this.assertionInfo(this.assertionId),
+          targetMSPID: mspid,
+        }));
+      });
+      await Promise.all(fabricJobs);
+      this.loading = false;
       this.dialog = false;
     },
   },
