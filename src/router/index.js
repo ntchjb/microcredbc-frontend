@@ -76,8 +76,13 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (store.getters['setting/isIdentityExist'] === false) {
-    await store.dispatch('setting/loadIdentity');
-    await store.dispatch('setting/loadProfile');
+    const loadJobs = [];
+    loadJobs.push(
+      store.dispatch('setting/loadIdentity'),
+      store.dispatch('setting/loadProfile'),
+      store.dispatch('setting/loadFabricNetwork'),
+    );
+    await Promise.all(loadJobs);
   }
   if (to.matched.some((record) => record.meta.requireIdentity)) {
     if (store.getters['setting/isIdentityExist'] === false) {

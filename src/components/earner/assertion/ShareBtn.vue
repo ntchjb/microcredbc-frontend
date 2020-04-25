@@ -43,14 +43,22 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import { fabricDefaultProperties } from '../../../helper/fabric-rest';
 export default {
   data: () => ({
     dialog: false,
     selectedOrgs: [],
   }),
   computed: {
+    ...mapGetters('setting', ['fabricNetwork']),
     // TODO: Query list of MSP ID from Fabric SDK
     mspIDs() {
+      const network = this.fabricNetwork;
+      const { channel } = fabricDefaultProperties;
+      if (network !== null) {
+        return Object.keys(this.fabricNetwork[channel].peers);
+      }
       return [];
     },
   },

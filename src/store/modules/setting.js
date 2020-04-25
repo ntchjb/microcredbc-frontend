@@ -6,9 +6,11 @@ const states = {
   profile: null,
   privateKey: null,
   certificate: null,
+  fabricNetwork: null,
 };
 
 const getters = {
+  fabricNetwork: (state) => state.fabricNetwork,
   isIdentityExist: (state) => (state.privateKey !== null && state.certificate !== null),
   role: (state) => (state.profile === null ? '' : state.profile.role),
   profile: (state) => state.profile,
@@ -131,6 +133,22 @@ const actions = {
     return fabric.checkEventServiceStatus();
   },
 
+  async getFabricNetwork({ commit, state }) {
+    const { channel, chaincode, mspid } = fabricDefaultProperties;
+    // Create Fabric client to get profile information from blockchain
+    const fabric = new FabricHTTPClient(
+      state.certificate,
+      state.privateKey,
+      channel,
+      chaincode,
+      mspid,
+    );
+    await fabric.loadFabricNodeNames();
+    const fabricNetwork = fabric.getFabricNodeNames();
+    await db.set('fabricNetwork', fabricNetwork);
+    commit('SET_FABRIC_NETWORK', fabricNetwork);
+  },
+
   async loadIdentity({ commit }) {
     const dbJobs = [];
     dbJobs.push(db.get('privateKey'));
@@ -153,6 +171,15 @@ const actions = {
     return false;
   },
 
+  async loadFabricNetwork({ commit }) {
+    const fabricNetwork = await db.get('fabricNetwork');
+    if (fabricNetwork !== undefined) {
+      commit('SET_FABRIC_NETWORK', fabricNetwork);
+      return true;
+    }
+    return false;
+  },
+
   async removeIdentity({ commit }) {
     const dbJobs = [];
     dbJobs.push(db.delete('privateKey'));
@@ -166,6 +193,11 @@ const actions = {
   async removeProfile({ commit }) {
     await db.delete('profile');
     commit('REMOVE_PROFILE');
+  },
+
+  async removeFabricNetwork({ commit }) {
+    await db.delete('fabricNetwork');
+    commit('REMOVE_FABRIC_NETWORK');
   },
 };
 
@@ -187,6 +219,12 @@ const mutations = {
   },
   REMOVE_PROFILE(state) {
     state.profile = null;
+  },
+  SET_FABRIC_NETWORK(state, fabricNetwork) {
+    state.fabricNetwork = fabricNetwork;
+  },
+  REMOVE_FABRIC_NETWORK(state) {
+    state.fabricNetwork = null;
   },
 };
 

@@ -32,8 +32,7 @@ const actions = {
       chaincode,
       mspid,
     );
-    await fabric.loadFabricNodeNames();
-    const nodeNames = fabric.getFabricNodeNames();
+    const nodeNames = rootState.setting.fabricNetwork;
     await fabric.getUnsignedProposal('getSubmitterTemplates', []);
     let allPeers = [];
     Object.keys(nodeNames[channel].peers).forEach((peerMspid) => {
@@ -54,8 +53,7 @@ const actions = {
       chaincode,
       mspid,
     );
-    await fabric.loadFabricNodeNames();
-    const nodeNames = fabric.getFabricNodeNames();
+    const nodeNames = rootState.setting.fabricNetwork;
     const badgeTemplateString = JSON.stringify(badgeTemplate);
     await fabric.getUnsignedProposal('createTemplate', [
       badgeTemplateString,
@@ -89,8 +87,7 @@ const actions = {
       chaincode,
       mspid,
     );
-    await fabric.loadFabricNodeNames();
-    const nodeNames = fabric.getFabricNodeNames();
+    const nodeNames = rootState.setting.fabricNetwork;
     await fabric.getUnsignedProposal('archiveTemplate', [
       badgeId,
     ]);

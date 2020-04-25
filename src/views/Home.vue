@@ -52,7 +52,7 @@ export default {
     ...mapGetters('setting', ['profile']),
   },
   methods: {
-    ...mapActions('setting', ['importIdentity', 'getProfile', 'setProfile', 'setRevocationList']),
+    ...mapActions('setting', ['importIdentity', 'getProfile', 'setProfile', 'setRevocationList', 'getFabricNetwork']),
     async login() {
       if (this.certFile == null || this.privKeyFile == null) {
         return;
@@ -66,6 +66,7 @@ export default {
         certificatePEM: files[0],
         privateKeyPEM: files[1],
       });
+      await this.getFabricNetwork();
       try {
         await this.getProfile();
       } catch (err) {

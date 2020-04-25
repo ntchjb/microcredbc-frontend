@@ -76,8 +76,7 @@ const actions = {
       chaincode,
       mspid,
     );
-    await fabric.loadFabricNodeNames();
-    const nodeNames = fabric.getFabricNodeNames();
+    const nodeNames = rootState.setting.fabricNetwork;
     await fabric.getUnsignedProposal('createCert', [], {
       assertion: JSON.stringify(assertionInfo),
       earnerMSPID,
@@ -119,8 +118,7 @@ const actions = {
       chaincode,
       mspid,
     );
-    await fabric.loadFabricNodeNames();
-    const nodeNames = fabric.getFabricNodeNames();
+    const nodeNames = rootState.setting.fabricNetwork;
     await fabric.getUnsignedProposal('shareToEarner', [], {
       assertionID,
       assertion: JSON.stringify(assertionInfo),
@@ -157,8 +155,7 @@ const actions = {
       chaincode,
       mspid,
     );
-    await fabric.loadFabricNodeNames();
-    const nodeNames = fabric.getFabricNodeNames();
+    const nodeNames = rootState.setting.fabricNetwork;
     await fabric.getUnsignedProposal('shareCert', [], {
       assertionID,
       assertion: JSON.stringify(assertionInfo),
@@ -188,8 +185,7 @@ const actions = {
       chaincode,
       mspid,
     );
-    await fabric.loadFabricNodeNames();
-    const nodeNames = fabric.getFabricNodeNames();
+    const nodeNames = rootState.setting.fabricNetwork;
     await fabric.getUnsignedProposal('getCerts', []);
     await fabric.sendSignedProposal(nodeNames[channel].peers[mspid]);
     const assertions = fabric.getQueryResults();
@@ -209,8 +205,7 @@ const actions = {
       chaincode,
       mspid,
     );
-    await fabric.loadFabricNodeNames();
-    const nodeNames = fabric.getFabricNodeNames();
+    const nodeNames = rootState.setting.fabricNetwork;
     await fabric.getUnsignedProposal('revokeCert', [
       assertionId,
       reason,
