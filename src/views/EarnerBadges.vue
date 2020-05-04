@@ -32,12 +32,12 @@
         />
       </v-col>
       <v-col
-        v-if="assertions.length === 0"
+        v-if="Object.keys(assertions).length === 0"
         cols="12"
         class="text-center"
       >
         <p class="grey--text">
-          There is no badge at the moment.
+          There is no badge assertion at the moment. Please hit refresh button above for updates.
         </p>
       </v-col>
     </v-row>
