@@ -36,7 +36,7 @@
           {{ profileWithDefaults.name }}
         </v-list-item-title>
         <v-list-item-subtitle
-          v-if="profileWithDefaults.description !== undefined"
+          v-if="profileWithDefaults.description"
           class="mb-6 text-center"
         >
           {{ profileWithDefaults.description }}
@@ -46,13 +46,13 @@
             mdi-email
           </v-icon>{{ profileWithDefaults.email }}
         </v-list-item-subtitle>
-        <v-list-item-subtitle v-if="profileWithDefaults.telephone !== undefined">
+        <v-list-item-subtitle v-if="profileWithDefaults.telephone">
           <v-icon left>
             mdi-phone
           </v-icon>
           {{ profileWithDefaults.telephone }}
         </v-list-item-subtitle>
-        <v-list-item-subtitle>
+        <v-list-item-subtitle v-if="profileWithDefaults.url">
           <v-icon left>
             mdi-information
           </v-icon>{{ profileWithDefaults.url }}
@@ -63,13 +63,14 @@
     <v-card-actions>
       <v-spacer />
       <link-btn
+        v-if="profileWithDefaults.url"
         :src="profileWithDefaults.url"
         responsive
       >
         Web
       </link-btn>
       <v-btn
-        v-if="profileWithDefaults.telephone !== undefined"
+        v-if="profileWithDefaults.telephone"
         text
         class="hidden-xs-only"
         @click="callProfile"
