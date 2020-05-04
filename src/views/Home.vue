@@ -98,14 +98,14 @@ export default {
       } catch (err) {
         this.status = 'Unable to get profile. Registering users...';
         this.snackbar = true;
-        if (this.profile.role === 'issuer') {
-          await this.setRevocationList();
-        }
       }
 
       try {
         await this.setProfile();
         await this.getProfile();
+        if (this.profile.role === 'issuer') {
+          await this.setRevocationList();
+        }
         this.$router.push({ name: 'Badges' });
       } catch (err) {
         this.status = `Unable to set profile. ${err.message}`;
