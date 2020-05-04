@@ -136,7 +136,7 @@ export default {
   },
   data: () => ({
     dialog: false,
-    badgeInfo: defaultBadgeInfo,
+    badgeInfo: { ...defaultBadgeInfo },
     loading: false,
     snackbar: false,
     status: '',
@@ -159,7 +159,7 @@ export default {
     closeDialog() {
       this.$refs.badgeImageUI.clear();
       this.$refs.alignmentUI.clear();
-      this.badgeInfo = defaultBadgeInfo;
+      this.badgeInfo = { ...defaultBadgeInfo };
       this.dialog = false;
     },
   },

@@ -184,7 +184,7 @@ export default {
   },
   data: () => ({
     dialog: false,
-    assertion: defaultAssertionInfo,
+    assertion: { ...defaultAssertionInfo },
     recipientProfile: null,
     loading: false,
     snackbar: false,
@@ -231,7 +231,7 @@ export default {
     },
     closeDialog() {
       this.$refs.evidenceUI.clear();
-      this.badgeInfo = defaultAssertionInfo;
+      this.badgeInfo = { ...defaultAssertionInfo };
       this.dialog = false;
     },
   },
