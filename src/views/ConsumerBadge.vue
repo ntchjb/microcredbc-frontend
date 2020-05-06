@@ -1,23 +1,5 @@
 <template>
   <v-container>
-    <v-row justify="end">
-      <v-col cols="auto">
-        <share-btn>
-          <template v-slot:btn="{ on }">
-            <v-btn
-              elevation="0"
-              :small="$vuetify.breakpoint.xsOnly"
-              v-on="on"
-            >
-              <v-icon left>
-                mdi-share
-              </v-icon>
-              Share
-            </v-btn>
-          </template>
-        </share-btn>
-      </v-col>
-    </v-row>
     <v-row>
       <v-col cols="12">
         <badge-info
@@ -104,7 +86,6 @@ const ProfileBtn = () => import('@/components/common/ProfileBtn.vue');
 const ProfileCard = () => import('@/components/common/ProfileCard.vue');
 const EvidenceBtn = () => import('@/components/assertion/EvidenceBtn.vue');
 const AlignmentBtn = () => import('@/components/badge/AlignmentBtn.vue');
-const ShareBtn = () => import('@/components/earner/assertion/ShareBtn.vue');
 
 export default {
   components: {
@@ -113,7 +94,6 @@ export default {
     ProfileBtn,
     EvidenceBtn,
     AlignmentBtn,
-    ShareBtn,
     ProfileCard,
   },
   data: () => ({
