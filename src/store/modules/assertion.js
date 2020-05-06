@@ -121,7 +121,6 @@ const actions = {
     await fabric.getUnsignedProposal('shareToEarner', [], {
       assertionID,
       assertion: JSON.stringify(assertionInfo),
-      earnerMSPID,
     });
     const earnerPeers = nodeNames[channel].peers[earnerMSPID];
     await fabric.sendSignedProposal(earnerPeers);
