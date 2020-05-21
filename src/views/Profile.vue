@@ -80,6 +80,7 @@
                     <v-col cols="6">
                       <v-textarea
                         v-model="profileExtra.url"
+                        :disabled="isIssuer"
                         label="Profile webpage"
                         auto-grow
                         rows="1"
@@ -129,6 +130,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { generateAndDownloadTextFile } from '../helper/filereader';
+import { roles } from '../constants';
 
 
 const ProfileCard = () => import('@/components/common/ProfileCard.vue');
@@ -147,7 +149,10 @@ export default {
     status: '',
   }),
   computed: {
-    ...mapGetters('setting', ['profile']),
+    ...mapGetters('setting', ['profile', 'role']),
+    isIssuer() {
+      return this.role === roles.issuer;
+    },
   },
   methods: {
     ...mapActions('setting', ['setProfile', 'getProfile', 'setRevocationList']),
